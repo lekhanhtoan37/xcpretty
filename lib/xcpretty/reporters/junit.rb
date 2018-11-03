@@ -21,6 +21,7 @@ module XCPretty
       @document.add_element('testsuites')
       @total_fails = 0
       @total_tests = 0
+      @document.root.add_attribute('name', options[:test_target]) unless options[:test_target].nil?
     end
 
     def handle(line)
@@ -34,7 +35,7 @@ module XCPretty
     def format_passing_test(classname, test_case, device, time)
       test_node = suite(classname).add_element('testcase')
       test_node.attributes['classname'] = classname
-      test_node.attributes['name']      = format_name(test_case, device)
+      test_node.attributes['name']      = test_case
       test_node.attributes['time']      = time
       @test_count += 1
     end
@@ -42,7 +43,7 @@ module XCPretty
     def format_pending_test(classname, test_case, device)
       test_node = suite(classname).add_element('testcase')
       test_node.attributes['classname'] = classname
-      test_node.attributes['name']      = format_name(test_case, device)
+      test_node.attributes['name']      = test_case
       test_node.add_element('skipped')
       @test_count += 1
     end
@@ -50,7 +51,7 @@ module XCPretty
     def format_failing_test(classname, test_case, device, reason, file)
       test_node = suite(classname).add_element('testcase')
       test_node.attributes['classname'] = classname
-      test_node.attributes['name']      = format_name(test_case, device)
+      test_node.attributes['name']      = test_case
       fail_node = test_node.add_element('failure')
       unless reason.to_s.empty?
         fail_node.attributes['message'] = reason
@@ -100,15 +101,6 @@ module XCPretty
       @total_tests += @test_count || 0
       @test_count = 0
       @fail_count = 0
-    end
-
-    def format_name(test_case, device)
-      if device.to_s.empty?
-        test_case
-      else
-        device_formatted = device.gsub(/[[:space:]]/, '')
-        "#{test_case}-#{device_formatted}"
-      end
     end
 
   end

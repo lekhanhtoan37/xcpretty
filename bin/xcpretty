@@ -68,6 +68,15 @@ OptionParser.new do |opts|
     end
     opts[:screenshots] = true
   end
+  # NOTE (thuyen): This is a trick for Xcode 10 to assign the test target from outside
+  # When using the parallel testing feature of Xcode 10, the log format has changed,
+  # we cannot get the test target from the logs
+  opts.on('--test-target TEST_TARGET', 'Set TEST_TARGET if using Xcode 10 parallel testing') do |target|
+    report_options.each do |option|
+      option[:test_target] = target
+    end
+  end
+
   opts.on_tail('-h', '--help', 'Show this message') { puts opts; exit }
   opts.on_tail("-v", "--version", "Show version") { puts XCPretty::VERSION; exit }
   opts.parse!
