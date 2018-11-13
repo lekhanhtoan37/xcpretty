@@ -381,7 +381,7 @@ module XCPretty
       when EXECUTED_MATCHER
         format_summary_if_needed(text)
       when RESTARTING_TESTS_MATCHER
-        formatter.format_failing_test(@test_suite, @test_case, "Test crashed", "n/a")
+        formatter.format_failing_test(@test_suite, @test_case, nil, "Test crashed", "n/a")
       when UI_FAILING_TEST_MATCHER
         formatter.format_failing_test(@test_suite, @test_case, nil, $2, $1)
       when PARALLEL_FAILING_TEST_MATCHER
